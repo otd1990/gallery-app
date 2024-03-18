@@ -228,6 +228,9 @@ onUnmounted(() => {
   margin-left: -1.25rem;
 
   color: var(--colour-gray-dark);
+
+  z-index: 1;
+  position: relative;
 }
 
 .slideshow__footer {
