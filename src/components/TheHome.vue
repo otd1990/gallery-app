@@ -14,7 +14,10 @@
         >
           <article class="gallery-card flex items-center justify-center">
             <img :src="data[itemIndex].images.thumbnail" alt="Painting" class="gallery-card-img" />
-            <aside :id="`painingName--${itemIndex}`" class="home__painting-info">
+            <aside
+              :id="`painingName--${data[itemIndex].name.replace(/\s/g, '')}`"
+              class="home__painting-info"
+            >
               <h2 class="home__painting-name">
                 {{ data[itemIndex].name }}
               </h2>
