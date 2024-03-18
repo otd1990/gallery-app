@@ -61,7 +61,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ViewButtonIcon from './icons/ViewButtonIcon.vue'
 import NextIcon from './icons/NextIcon.vue'
@@ -74,8 +74,6 @@ defineEmits(['showModal'])
 const route = useRoute()
 const router = useRouter()
 
-console.log(route)
-
 const currentSlide = ref(parseInt(route.params.slide))
 const slideToShow = ref(data[currentSlide.value])
 const modalImage = ref('')
@@ -84,6 +82,8 @@ const showModal = ref(false)
 const prevDisabled = ref(true)
 const nextDisabled = ref(false)
 const progress = ref(0)
+
+let slideShowTimeout = undefined
 
 const viewImage = (image, imageName) => {
   modalImage.value = image
@@ -111,17 +111,15 @@ const checkDisabled = (slide) => {
 }
 
 const progressBar = () => {
-  console.log(currentSlide.value)
   const footerWidth = document.querySelector('.slideshow__footer')
   const totalSlides = data.length - 1
   let prog = Math.floor((footerWidth.offsetWidth / totalSlides) * currentSlide.value)
-  console.log(typeof prog)
 
   progress.value = prog
 }
 
 const slideShowAuto = () => {
-  setTimeout(() => {
+  slideShowTimeout = setTimeout(() => {
     goToNext(currentSlide.value + 1)
   }, 5000)
 }
@@ -152,13 +150,16 @@ watch(
 )
 
 onMounted(() => {
-  console.log('Mounted')
   checkDisabled(parseInt(route.params.slide))
   progressBar()
 
   if (route.query.autoplay === 'true') {
     slideShowAuto()
   }
+})
+
+onUnmounted(() => {
+  clearTimeout(slideShowTimeout)
 })
 </script>
 

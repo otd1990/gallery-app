@@ -1,12 +1,15 @@
 <template>
   <article class="header">
     <section class="header__logo">
-      <RouterLink to="/"><GallerriaHeading /></RouterLink>
+      <RouterLink to="/" aria-label="Go back to the home page">
+        <h1 class="visually-hidden">Galleria App</h1>
+        <GallerriaHeading />
+      </RouterLink>
     </section>
     <section class="header__start">
-      <router-link to="/slide-show/0?autoplay=true" class="header__start-button"
-        >Start Slideshow</router-link
-      >
+      <router-link to="/slide-show/0?autoplay=true" class="header__start-button">
+        Start Slideshow
+      </router-link>
     </section>
   </article>
 </template>
@@ -22,7 +25,7 @@ import GallerriaHeading from './icons/GallerriaHeading.vue'
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 1.5rem 1rem;
   border-bottom: 1px solid var(--colour-gray-mid);
 }
 
