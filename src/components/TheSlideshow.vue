@@ -2,29 +2,33 @@
   <article class="slideshow__main">
     <section class="slideshow__left">
       <article class="slideshow__image">
-        <img :src="slideToShow.images.hero.small" :alt="slideToShow.name" />
+        <div class="slideshow__image-container">
+          <img :src="slideToShow.images.hero.small" :alt="slideToShow.name" />
+          <button
+            @click="viewImage(slideToShow.images.hero.small, slideToShow.name)"
+            class="view-image__button"
+          >
+            <ViewButtonIcon />
+            <span>VIEW IMAGE</span>
+          </button>
+          <aside class="slideshow-artist__image">
+            <img :src="slideToShow.artist.image" :alt="slideToShow.artist.name" />
+          </aside>
+        </div>
         <aside class="slideshow__title-container">
           <h1 class="slideshow__title">{{ slideToShow.name }}</h1>
           <p class="slideshow__artist susbheading-one">{{ slideToShow.artist.name }}</p>
-        </aside>
-        <button
-          @click="viewImage(slideToShow.images.hero.small, slideToShow.name)"
-          class="view-image__button"
-        >
-          <ViewButtonIcon />
-          <span>VIEW IMAGE</span>
-        </button>
-        <aside class="slideshow-artist__image">
-          <img :src="slideToShow.artist.image" :alt="slideToShow.artist.name" />
         </aside>
       </article>
     </section>
     <section class="slideshow__right">
       <article class="slideshow__desc-container">
-        <aside class="slideshow__date">{{ slideToShow.year }}</aside>
-        <div class="slideshow__desc">
-          {{ slideToShow.description }}
-        </div>
+        <article class="slideshow__desc">
+          <section class="slideshow__desc--text-date">
+            <aside class="slideshow__date">{{ slideToShow.year }}</aside>
+            <p class="slideshow__text">{{ slideToShow.description }}</p>
+          </section>
+        </article>
       </article>
     </section>
   </article>
@@ -119,6 +123,10 @@ const progressBar = () => {
 }
 
 const slideShowAuto = () => {
+  if (slideShowTimeout) {
+    clearTimeout(slideShowTimeout)
+  }
+
   slideShowTimeout = setTimeout(() => {
     goToNext(currentSlide.value + 1)
   }, 5000)
@@ -159,6 +167,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  console.log('SLide show unmounted, clear the autoplay')
   clearTimeout(slideShowTimeout)
 })
 </script>
@@ -185,6 +194,10 @@ onUnmounted(() => {
   flex-direction: column;
 }
 
+.slideshow__image-container {
+  position: relative;
+}
+
 .slideshow__image {
   display: flex;
   flex-direction: row;
@@ -202,12 +215,11 @@ onUnmounted(() => {
 
 .slideshow__title-container {
   background: #fff;
-  padding: 0.5rem 4rem;
-  min-height: 238px;
-
+  padding: 0.5rem 2rem;
+  min-height: 15rem;
   position: absolute;
   top: 0;
-  left: 75%;
+  left: 65%;
 }
 
 .slideshow__artist {
@@ -221,16 +233,23 @@ onUnmounted(() => {
 }
 
 .slideshow__desc {
-  max-width: 22rem;
-  font-size: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 2rem;
 
-  margin-top: -3rem;
-  margin-left: -1.25rem;
+  max-width: 40rem;
+  font-size: 1.25rem;
+  margin: 0 auto;
 
   color: var(--colour-gray-dark);
 
   z-index: 1;
   position: relative;
+}
+
+.slideshow__desc--text-date {
+  text-align: center;
 }
 
 .slideshow__footer {
@@ -250,7 +269,7 @@ onUnmounted(() => {
   background-color: var(--colour-black);
   height: 1px;
   position: absolute;
-  top: 0;
+  top: -1px;
   left: 0;
   transition: all 0.3s;
 }
@@ -288,16 +307,15 @@ onUnmounted(() => {
 }
 
 .slideshow-artist__image {
-  width: 100%;
-  position: relative;
-  top: 4rem;
-  margin-left: 2rem;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
 }
 
 .slideshow-artist__image img {
   display: block;
-  height: 128px;
-  width: 128px;
+  height: 5rem;
+  width: 5rem;
 }
 
 @media (max-width: 1440px) {
@@ -308,20 +326,67 @@ onUnmounted(() => {
 
 @media (max-width: 1365px) {
   .slideshow__main {
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
   }
 
-  .slideshow-artist__image {
-    top: -12rem;
+  .slideshow__date {
+    font-size: 12rem;
+    line-height: 10rem;
+  }
+}
+@media (max-width: 1280px) {
+  .slideshow__main {
+    justify-content: center;
   }
 
   .slideshow__desc {
     max-width: 100%;
-    margin-left: 3rem;
-    margin-left: 11rem;
-    margin-top: -7rem;
+    margin: 1rem 0;
+  }
+
+  .slideshow__image {
+    height: auto;
+    width: auto;
+  }
+
+  .slideshow__title-container {
+    min-height: auto;
+    position: initial;
+    top: unset;
+    left: unset;
+  }
+}
+
+@media (max-width: 900px) {
+  .slideshow__date {
+    font-size: 7rem;
+    line-height: 5rem;
+  }
+
+  .slideshow__text {
+    font-size: 1.15rem;
+  }
+
+  .slideshow__title {
+    font-size: 2rem;
+    line-height: 2.5rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 650px) {
+  .slideshow__image {
+    flex-wrap: wrap;
+  }
+
+  .slideshow__image-container {
+    order: 2;
+  }
+
+  .slideshow__title-container {
+    order: 1;
+    text-align: center;
+    margin: 0 auto;
   }
 }
 </style>
